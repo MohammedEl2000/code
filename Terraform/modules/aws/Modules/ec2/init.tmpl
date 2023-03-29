@@ -1,4 +1,7 @@
+#!/bin/bash
 sudo su
+curl -k https://puppet-master1-hmqazga8yrlcunj5.us-east-1.opsworks-cm.io:8140/packages/current/install.bash | sudo bash
+mkdir /var/www
 sudo echo "<?php
 define('DB_SERVER', '${endpoint}');
 define('DB_USERNAME', 'user');
