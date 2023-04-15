@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Security groups"
+
+Parameters:
+  Environment:
+    Description: Product name
+    Type: String
+    Default: FYP
+
+Resources:
+  #RDS Database
+  RDSDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for RDS database
+      SubnetIds:
+      - Fn::ImportValue: 
+            !Sub "${Environment}-PrivateSubnet1Id"
+      - Fn::ImportValue: 
+            !Sub "${Environment}-PrivateSubnet2Id"
+      Tags:
+      - Key: Name
+        Value: my-rds-subnet-group
+        
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId:
+        Fn::ImportValue: 
+          !Sub "${Environment}-VpcId"
+      GroupDescription: Allow inbound traffic to RDS database
+      SecurityGroupEgress: 
+        - CidrIp: "0.0.0.0/0"
+          Description: "Allow all outbound traffic"
+          FromPort: 0
+          IpProtocol: -1
+          ToPort: 0
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: "0.0.0.0/0"
+      Tags:
+      - Key: Name
+        Value: rds-security-group
+
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro
+      Engine: mysql
+      AllocatedStorage: 20
+      DBName: dbmysql
+      MasterUsername: user
+      MasterUserPassword: password
+      DBSubnetGroupName: !Ref RDSDBSubnetGroup
+      VPCSecurityGroups:
+      - !Ref RDSSecurityGroup
+      Tags:
+      - Key: Name
+        Value: my-rds-instance
+
+Outputs:
+  ExternalAlbDnsName:
+    Description: DNS record of external alb
+    Value: !GetAtt RDSInstance.Endpoint.Address
+    Export: 
+      Name: !Sub "${Environment}-endpoint"
