@@ -17,10 +17,7 @@ username                 = "user"
 password                 = "password"
 
 #AZURE
-subscription_id = "e804f196-48a4-4ae5-b1ed-3dabc584f441"
-client_id       = "942b7fc8-dafc-4b69-aeee-4d53710f817f"
-client_secret   = "w-Y8Q~BZ6TIf8KRHprDIdOaIo02OZcj4xlkeNb50"
-tenant_id       = "766317cb-e948-4e5f-8cec-dabc8e2fd5da"
+
 
 application = "fyp"
 environment = "project23"
