@@ -15,7 +15,7 @@ systemctl restart apache2
 sudo rm -rf /var/www/html/*
 echo ${endpoint} >> test.txt
 sudo echo "<?php
-define('DB_SERVER', '${endpoint}.mysql.database.azure.com');
+define('DB_SERVER', 'azure.mysql.database.azure.com');
 define('DB_USERNAME', 'mysqladmin');
 define('DB_PASSWORD', 'Password123');
 define('DB_DATABASE', 'exampledb');
